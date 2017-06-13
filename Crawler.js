@@ -4,15 +4,19 @@ var URL = require('url-parse');
 var HashMap = require('hashmap');
 var mongoose = require('mongoose');
 var startUrl = "https://www.flipkart.com/";
-var depth= 1; //mention the depth value here with 0 being the root level.
-var depthCounter = 0;
-var counter = 0;
 var url = new URL(startUrl);
 var baseUrl = url.protocol+ "//" + url.hostname;
 var pages = new HashMap();
 pages.set(startUrl,0); 
+
+var depth= 1; //mention the depth value here with 0 being the root level.
+var depthCounter = 0;
 var counter = 0;
+var counter = 0;
+
 Url = require('./model/Url');
+
+//connecting to mongodb instance
 mongoose.connect('mongodb://localhost/urlstore');
 var db = mongoose.connection;
 // A function to collect all the links on the page
@@ -26,14 +30,14 @@ function collectLinks($, value) {
   relativeLinks.each(function() {
     if(pages.get(baseUrl + $(this).attr('href'))== null) //if the link doesn't exist in the map, push it.
       pages.set(baseUrl + $(this).attr('href'), depthCounter);
-      });
+  });
 
   absoluteLinks = $("a[href^='h']");
   console.log("Found " + absoluteLinks.length + " absolute links on page \n");
-     $(absoluteLinks).each(function(i, link){
-      if(pages.get($(link).attr('href')) == null)
-        pages.set($(link).attr('href'), depthCounter);
-    });
+  $(absoluteLinks).each(function(i, link){
+    if(pages.get($(link).attr('href')) == null)
+      pages.set($(link).attr('href'), depthCounter);
+  });
 }
 
 
