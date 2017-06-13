@@ -1,0 +1,13 @@
+{
+  "name": "simple-webcrawler-javascript",
+  "version": "0.0.0",
+  "description": "A simple webcrawler written in JavaScript",
+  "main": "crawler.js",
+  "author": "Stephen",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "*",
+    "url-parse": "*",
+    "request": "*"
+  }
+}
