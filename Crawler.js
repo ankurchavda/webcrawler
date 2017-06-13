@@ -8,15 +8,15 @@ var depthCounter = 0;
 var counter = 0;
 var url = new URL(startUrl);
 var baseUrl = url.protocol+ "//" + url.hostname;
-var pages = new HashMap(); //define a hashmap
-pages.set(startUrl,0); //setting the hashmap with intial url value
+var pages = new HashMap();
+pages.set(startUrl,0); 
 var counter = 0;
 
 // A function to collect all the links on the page
 function collectLinks($, value) {
   
   depthCounter = value+1;
-  console.log("You are at level "+ value +"\n");
+  console.log("You are at level "+ value);
 
   var relativeLinks = $("a[href^='/']");
   console.log("Found " + relativeLinks.length + " relative links on page");
@@ -25,9 +25,9 @@ function collectLinks($, value) {
       pages.set(baseUrl + $(this).attr('href'), depthCounter);
       });
 
-  externalLinks = $("a[href^='h']");
-  console.log("Found " + externalLinks.length + " external links on page");
-     $(externalLinks).each(function(i, link){
+  absoluteLinks = $("a[href^='h']");
+  console.log("Found " + absoluteLinks.length + " absolute links on page \n");
+     $(absoluteLinks).each(function(i, link){
       if(pages.get($(link).attr('href')) == null)
         pages.set($(link).attr('href'), depthCounter);
     });
@@ -48,9 +48,11 @@ function crawl() {
   }
   //remove the page once it is visited
   pages.remove(nextPage);
-  // setTimeout(function(){console.log("timeout");}, 60000);
+
   var end = Date.now() + Math.floor(Math.random()*10000);
+  console.log("Waiting!");
   while (Date.now() < end) ;
+
   // Make the request
   console.log("Visiting page " + nextPage);
   counter++;
@@ -60,12 +62,11 @@ function crawl() {
      try{console.log("Status code: " + response.statusCode);
 
      if(response.statusCode !== 200) {
-       console.log("Some issue with the URL");
+       console.log("Oops! we are moving onto next url.");
      }
    }
    catch(e){
     console.log("invalid URL");
-    return;
   }
      // Parse the document body
      var $ = cheerio.load(body);
