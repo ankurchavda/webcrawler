@@ -2,6 +2,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var URL = require('url-parse');
 var HashMap = require('hashmap');
+var mongoose = require('mongoose');
 var startUrl = "https://www.flipkart.com/";
 var depth= 1; //mention the depth value here with 0 being the root level.
 var depthCounter = 0;
@@ -11,7 +12,9 @@ var baseUrl = url.protocol+ "//" + url.hostname;
 var pages = new HashMap();
 pages.set(startUrl,0); 
 var counter = 0;
-
+Url = require('./model/Url');
+mongoose.connect('mongodb://localhost/urlstore');
+var db = mongoose.connection;
 // A function to collect all the links on the page
 function collectLinks($, value) {
   
@@ -39,7 +42,11 @@ function crawl() {
   var keys = pages.keys();
   var nextPage = keys[0];
   var value = pages.get(nextPage);
-
+  url = {"url": nextPage, "depth": value};
+  Url.addUrl(url,function(err,res){
+    if(err)
+      throw err;
+  })
   //end the recursion if depth value of the url is greater than required
   if(value > depth)
   {
